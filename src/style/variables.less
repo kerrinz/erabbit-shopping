@@ -1,0 +1,54 @@
+// 帮助
+@helpColor: #e26237;
+// 成功
+@success: #1dc779;
+// 警告
+@warnColor: #ffb302;
+// 价格
+@priceColor: #cf4444;
+
+// 主题色
+@primaryColor: var(--color-primary);
+@surfaceColor: var(--color-surface);
+@surfaceVariantColor: var(--color-surfaceVariant);
+@backgroundColor: var(--color-background);
+
+@text0Color: var(--color-text0);
+@text1Color: var(--color-text1);
+@text2Color: var(--color-text2);
+@text3Color: var(--color-text3);
+@text4Color: var(--color-text4);
+@text5Color: var(--color-text5);
+@text6Color: var(--color-text6);
+
+/* 浅色主题 */
+:root {
+  --color-primary: #409eff;
+  --color-secondary: #3886d5;
+  --color-surface: #fff;
+  --color-surfaceVariant: #eee;
+  --color-background: #f3f4f5;
+  --color-text0: #000;
+  --color-text1: #222;
+  --color-text2: #404040;
+  --color-text3: #555;
+  --color-text4: #777;
+  --color-text5: #999;
+  --color-text6: #bbb;
+}
+/* 深色主题 */
+/* @media (prefers-color-scheme: dark) { }*/
+:root.dark {
+  --color-primary: #409eff;
+  --color-secondary: #3886d5;
+  --color-surface: #202020;
+  --color-surfaceVariant: #333;
+  --color-background: #151515;
+  --color-text0: #fff;
+  --color-text1: #eee;
+  --color-text2: #ccc;
+  --color-text3: #aaa;
+  --color-text4: #888;
+  --color-text5: #666;
+  --color-text6: #444;
+}

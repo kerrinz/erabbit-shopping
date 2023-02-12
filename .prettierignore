@@ -1,0 +1,9 @@
+#ignore
+node_modules
+.DS_Store
+yarn*
+*-lock*
+dist*
+public/
+components.d.ts
+auto-imports.d.ts
