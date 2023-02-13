@@ -10,7 +10,10 @@
       }}</el-breadcrumb-item>
       <el-breadcrumb-item>{{ product.name }}</el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="info_pannel"></div>
+    <div class="info_pannel">
+      <!-- 商品封面预览区 -->
+      <ProductPreviews :banners="product?.mainPictures ?? []"></ProductPreviews>
+    </div>
   </div>
 </template>
 
@@ -18,7 +21,8 @@
 import { ArrowRight } from "@element-plus/icons-vue";
 import { findGoods } from "@/api/product";
 import { useRoute } from "vue-router";
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import ProductPreviews from "./widgets/ProductPreviews.vue";
 
 // 商品id
 const id = useRoute().params.id.toString();

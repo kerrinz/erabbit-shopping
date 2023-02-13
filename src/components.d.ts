@@ -35,6 +35,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     XCarousel: typeof import('./components/pageview/x-carousel.vue')['default']
+    XExhibitMagnifier: typeof import('./components/exhibit/x-exhibit-magnifier.vue')['default']
     XSkeleton: typeof import('./components/layout/x-skeleton.vue')['default']
     XThemeModeButton: typeof import('./components/buttons/x-theme-mode-button.vue')['default']
   }
