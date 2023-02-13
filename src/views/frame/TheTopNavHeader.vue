@@ -1,30 +1,23 @@
 <template>
   <el-header class="toolbar">
     <el-container class="container">
-      <span class="brand">欢迎光临商城！</span>
+      <x-theme-mode-button />
       <div class="actions">
         <nav>
           <li v-if="account">
-            <RouterLink class="link login" to="/profile">
+            <router-link class="link login" to="/profile">
               {{ account?.account }}
-            </RouterLink>
-            <a
-              class="link logout"
-              href="javascript:;"
-              @click.prevent="handleLogout"
-            >
-              退出登录
-            </a>
+            </router-link>
+            <a class="link logout" href="javascript:;" @click.prevent="handleLogout"> 退出登录 </a>
           </li>
           <li v-else>
-            <RouterLink class="link login" to="/login"> 请登录 </RouterLink>
+            <router-link class="link login" to="/login"> 请登录 </router-link>
           </li>
           <li><a class="link" href="#">我的订单</a></li>
           <li><a class="link" href="#">会员中心</a></li>
           <li><a class="link" href="#">帮助中心</a></li>
           <li><a class="link" href="#">关于我们</a></li>
         </nav>
-        <ThemeModeButton class="btn-theme" />
       </div>
     </el-container>
   </el-header>
@@ -98,15 +91,6 @@ const handleLogout = () => {
         padding-left: 0;
       }
     }
-  }
-}
-.btn-theme {
-  color: #ccc;
-  background-color: unset;
-  border-color: #666;
-  &:hover {
-    color: @primaryColor;
-    background-color: #555;
   }
 }
 </style>

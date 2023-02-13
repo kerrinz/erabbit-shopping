@@ -5,8 +5,7 @@ import request from "@/request/request";
  * 获取所有分类（顶级，二级，对应的商品推荐数据）
  * @returns Promise
  */
-export const findNavCategory = () =>
-  request<NavCategory[]>("get", "/home/category/head");
+export const findNavCategory = () => request<NavCategory[]>("get", "/home/category/head");
 
 /**
  * 获取一级分类详细信息

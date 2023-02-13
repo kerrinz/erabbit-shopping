@@ -15,17 +15,13 @@
         <el-input v-model="form.name" placeholder="Please username." />
       </el-form-item>
       <el-form-item label="Password" prop="pass">
-        <el-input
-          v-model="form.pass"
-          type="password"
-          placeholder="Please password."
-        />
+        <el-input v-model="form.pass" type="password" placeholder="Please password." />
       </el-form-item>
     </el-form>
     <div>
-      <RouterLink to="/register">
+      <router-link to="/register">
         <el-link>没有账号？立即注册></el-link>
-      </RouterLink>
+      </router-link>
     </div>
     <el-button @click="submitForm(formRef)">确认登录</el-button>
   </main>
@@ -43,9 +39,7 @@ const router = useRouter();
 const accountStore = useAccountStore();
 
 // 重定向地址
-const redirectUrl = router.currentRoute.value.query["redirectUrl"] as
-  | string
-  | undefined;
+const redirectUrl = router.currentRoute.value.query["redirectUrl"] as string | undefined;
 
 // 表单
 const formRef = ref<FormInstance>();

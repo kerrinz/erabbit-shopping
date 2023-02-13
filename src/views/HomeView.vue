@@ -1,18 +1,23 @@
 <template>
   <main>
-    <div>Home</div>
-    <el-button @click="handleAbout">About</el-button>
-    <el-button @click="handleLogin">Login</el-button>
+    <x-carousel :banners="banners"></x-carousel>
   </main>
 </template>
 
 <script setup lang="ts">
-import router from "@/router";
+import { findBanner } from "@/api/home";
+import type { CarouselBanner } from "@/components/pageview/x-carousel.vue";
+import { ref } from "vue";
 
-const handleAbout = () => {
-  router.push("/about");
+const useBannerList = () => {
+  const bannerList = ref<CarouselBanner[]>([]);
+  findBanner().then((res) => {
+    console.log(res.result);
+    bannerList.value = res.result.map((value) => {
+      return { image: value.imgUrl, href: value.hrefUrl };
+    });
+  });
+  return bannerList;
 };
-const handleLogin = () => {
-  router.push("/login");
-};
+const banners = useBannerList();
 </script>

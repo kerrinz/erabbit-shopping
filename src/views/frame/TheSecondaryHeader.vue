@@ -4,7 +4,7 @@
       <div class="banner">百货商城</div>
       <ul class="categories">
         <li>
-          <RouterLink to="/"><el-link class="text">首页</el-link></RouterLink>
+          <router-link to="/"><el-link class="text">首页</el-link></router-link>
         </li>
         <!-- 其他分类项 -->
         <li
@@ -14,20 +14,20 @@
           @mouseenter="showSubNav(index)"
           @mouseleave="hideSubNav"
         >
-          <RouterLink :to="`/category/${category.id}`" @click="hideSubNav">
+          <router-link :to="`/category/${category.id}`" @click="hideSubNav">
             <el-link class="text">
               {{ category.name }}
             </el-link>
-          </RouterLink>
+          </router-link>
           <!-- 子分类展示框 -->
           <div class="sub-nav">
-            <transition name="el-fade-in">
+            <transition name="el-fade-out" mode="out-in">
               <ul v-if="activeIndex == index">
                 <li v-for="sub in categories[activeIndex].children" :key="sub.id">
-                  <RouterLink @click="hideSubNav" :to="`/category/sub/${sub.id}`">
-                    <img :src="sub.picture" alt="" />
+                  <router-link @click="hideSubNav" :to="`/category/sub/${sub.id}`">
+                    <img :src="sub.picture" :alt="sub.name" />
                     <div class="title">{{ sub.name }}</div>
-                  </RouterLink>
+                  </router-link>
                 </li>
               </ul>
             </transition>
@@ -41,6 +41,7 @@
 <script setup lang="ts">
 import { findNavCategory } from "@/api/category";
 import { ref } from "vue";
+import type { NavCategory } from "@/model/category-model";
 
 // 是否显示子分类
 const isShowLayer = ref(false);
@@ -48,7 +49,7 @@ const isShowLayer = ref(false);
 const activeIndex = ref(-1);
 
 const useCategories = () => {
-  const categories = ref();
+  const categories = ref([] as NavCategory[]);
   findNavCategory().then((res) => {
     categories.value = res.result;
   });
@@ -59,15 +60,11 @@ const categories = useCategories();
 
 // 显示子分类框
 const showSubNav = (index: number) => {
-  console.log(index);
   isShowLayer.value = true;
   activeIndex.value = index;
 };
 // 隐藏子分类框
-const hideSubNav = () => {
-  isShowLayer.value = false;
-  activeIndex.value = -1;
-};
+const hideSubNav = () => (isShowLayer.value = false);
 </script>
 
 <style lang="less" scoped>
@@ -75,6 +72,7 @@ const hideSubNav = () => {
   width: 100%;
   height: 100px;
   background-color: @surfaceColor;
+  transition: background.3s;
   > .container {
     .page-container();
     display: flex;
@@ -107,7 +105,15 @@ const hideSubNav = () => {
     &.active {
       a.text {
         color: @primaryColor;
-        border-bottom: 1px solid @primaryColor;
+        &::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: 0;
+          bottom: 0;
+          border-bottom: 1px solid var(--el-link-hover-text-color);
+        }
       }
       .sub-nav {
         height: 150px;
@@ -122,16 +128,16 @@ const hideSubNav = () => {
   height: 0px;
   opacity: 0;
   overflow: hidden;
+  z-index: 1005;
   position: absolute;
   left: 0;
   margin-top: 16px;
   width: 100%;
   background-color: @surfaceColor;
-  box-shadow: 0 0 4px rgba(100, 100, 100, 0.2);
+  box-shadow: 0 0 4px rgba(100, 100, 100, 0.33);
   transition: all 0.2s 0.1s;
   ul {
     display: flex;
-    // flex-wrap: wrap;
     padding: 0 70px;
     align-items: center;
     height: 132px;

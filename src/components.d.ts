@@ -29,8 +29,10 @@ declare module '@vue/runtime-core' {
     ElMessage: typeof import('element-plus/es')['ElMessage']
     ElMessageBox: typeof import('element-plus/es')['ElMessageBox']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
+    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    ThemeModeButton: typeof import('./components/buttons/ThemeModeButton.vue')['default']
+    XCarousel: typeof import('./components/pageview/x-carousel.vue')['default']
+    XThemeModeButton: typeof import('./components/buttons/x-theme-mode-button.vue')['default']
   }
 }

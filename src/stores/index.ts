@@ -12,4 +12,6 @@ export const enum ModulesEnum {
   account,
   /** 购物车 */
   cart,
+  /** 主题相关配置 */
+  theme,
 }
