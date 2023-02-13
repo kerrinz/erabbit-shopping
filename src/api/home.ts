@@ -1,4 +1,6 @@
 import type { BannerModel } from "@/model/banner-model";
+import type { CommonGoods } from "@/model/common-model";
+import type { RecommendItem } from "@/model/home-model";
 import { request } from "@/request/request";
 
 // any 就 any 吧，开摆！
@@ -21,15 +23,13 @@ export const findBanner = () => {
 /**
  * 获取新鲜好物
  */
-export const findNew = () => {
-  return request<any>("get", "/home/new");
-};
+export const findNew = () => request<CommonGoods[]>("get", "/home/new");
 
 /**
  * 获取人气推荐
  */
-export const findHot = () => {
-  return request<any>("get", "/home/hot");
+export const findHotRecommend = () => {
+  return request<RecommendItem[]>("get", "/home/hot");
 };
 
 /**

@@ -1,0 +1,45 @@
+<template>
+  <div class="page-container">
+    <el-breadcrumb class="breadcrumb" v-if="product" :separator-icon="ArrowRight">
+      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="`/categoy/${product.categories[1].id}`">{{
+        product.categories[1].name
+      }}</el-breadcrumb-item>
+      <el-breadcrumb-item :to="`/categoy/sub/${product.categories[0].id}`">{{
+        product.categories[0].name
+      }}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ product.name }}</el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="info_pannel"></div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ArrowRight } from "@element-plus/icons-vue";
+import { findGoods } from "@/api/product";
+import { useRoute } from "vue-router";
+import { ref } from "vue";
+
+// 商品id
+const id = useRoute().params.id.toString();
+const useGoodsDetail = () => {
+  const product = ref<any>(undefined);
+  findGoods(id).then((res) => {
+    console.log(res.result);
+    product.value = res.result;
+  });
+  return product;
+};
+
+const product = useGoodsDetail();
+</script>
+<style lang="less" scoped>
+.breadcrumb {
+  margin: 2em 1em;
+}
+.info_pannel {
+  background-color: @surfaceColor;
+  padding: 2em;
+  border-radius: 2px;
+}
+</style>

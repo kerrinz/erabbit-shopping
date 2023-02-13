@@ -1,13 +1,11 @@
 <template>
+  <!-- 顶栏 -->
   <TheHeader></TheHeader>
-  <div class="container">
-    <TheSecondaryHeader />
-    <el-container direction="vertical">
-      <el-main>
-        <RouterView />
-      </el-main>
-    </el-container>
-  </div>
+  <!-- 次顶栏 -->
+  <TheSecondaryHeader />
+  <!-- 内容 -->
+  <RouterView />
+  <!-- 页脚 -->
   <TheFooter>Footer</TheFooter>
 </template>
 
@@ -17,8 +15,4 @@ import TheSecondaryHeader from "./TheSecondaryHeader.vue";
 import TheHeader from "./TheTopNavHeader.vue";
 </script>
 
-<style scoped lang="less">
-.container {
-  min-width: 1000px;
-}
-</style>
+<style scoped lang="less"></style>

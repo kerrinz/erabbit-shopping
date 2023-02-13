@@ -1,18 +1,23 @@
 <template>
-  <main>
+  <main class="container">
     <x-carousel :banners="banners"></x-carousel>
+    <!-- 新鲜好物 -->
+    <HomeNewGoodsPreview />
+    <!-- 人气推荐 -->
+    <HomeRecommendPreview />
   </main>
 </template>
 
 <script setup lang="ts">
-import { findBanner } from "@/api/home";
 import type { CarouselBanner } from "@/components/pageview/x-carousel.vue";
 import { ref } from "vue";
+import HomeNewGoodsPreview from "./widgets/HomeNewGoodsPreview.vue";
+import HomeRecommendPreview from "./widgets/HomeRecommendPreview.vue";
+import { findBanner } from "@/api/home";
 
 const useBannerList = () => {
   const bannerList = ref<CarouselBanner[]>([]);
   findBanner().then((res) => {
-    console.log(res.result);
     bannerList.value = res.result.map((value) => {
       return { image: value.imgUrl, href: value.hrefUrl };
     });
@@ -21,3 +26,10 @@ const useBannerList = () => {
 };
 const banners = useBannerList();
 </script>
+
+<style lang="less" scoped>
+.container {
+  .page-container();
+  margin: auto;
+}
+</style>
