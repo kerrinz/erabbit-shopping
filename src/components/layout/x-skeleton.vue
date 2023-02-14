@@ -1,5 +1,9 @@
 <template>
-  <div class="skeleton" :class="{ active: animate }" :style="{ width, height }">
+  <div
+    class="skeleton"
+    :class="{ active: animate }"
+    :style="{ width, height, display: block ? 'block' : 'inline-block' }"
+  >
     <div class="item" :style="{ backgroundColor: color }"></div>
   </div>
 </template>
@@ -22,6 +26,11 @@ defineProps({
   animate: {
     type: Boolean,
     default: true,
+  },
+  // 是否块级元素
+  block: {
+    type: Boolean,
+    default: false,
   },
 });
 </script>

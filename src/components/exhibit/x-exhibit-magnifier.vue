@@ -97,6 +97,7 @@ const onMouseLeave = () => {
   vertical-align: middle;
   position: relative;
   display: inline-block;
+  border: 1px @primaryColor solid;
 }
 
 /* 放大图 */
@@ -112,6 +113,7 @@ const onMouseLeave = () => {
   overflow: hidden;
   z-index: 9999;
   transform: translateY(-50%);
+  background-color: @surfaceColor;
   img {
     width: 100%;
     height: 100%;
@@ -127,7 +129,7 @@ const onMouseLeave = () => {
   display: inline-block;
   cursor: pointer;
   position: relative;
-  border: 1px @primaryColor solid;
+  background-color: @surfaceColor;
   img {
     width: 100%;
     vertical-align: middle;

@@ -1,10 +1,19 @@
 <template>
-  <XExhibitMagnifier :src="currentBannerUrl"></XExhibitMagnifier>
-  <ul class="product_banners">
-    <li v-for="(item, i) in props.banners" :key="item" :class="{ active: index == i }">
-      <img @mousemove="index = i" :src="item" />
-    </li>
-  </ul>
+  <div>
+    <XExhibitMagnifier class="large_banner" :src="currentBannerUrl"></XExhibitMagnifier>
+    <ul class="product_banners">
+      <template v-if="props.banners.length > 0">
+        <li v-for="(item, i) in props.banners" :key="item" :class="{ active: index == i }">
+          <img @mousemove="index = i" :src="item" />
+        </li>
+      </template>
+      <template v-else>
+        <li v-for="n in 5" :key="n">
+          <XSkeleton height="100%"></XSkeleton>
+        </li>
+      </template>
+    </ul>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -25,22 +34,27 @@ const currentBannerUrl = computed(() => {
 });
 </script>
 <style lang="less" scoped>
+@outlineColor: rgba(125, 125, 125, 0.2);
+.large_banner {
+  border-color: @outlineColor;
+}
 ul.product_banners {
-  width: 400px;
+  width: 408px;
   height: 75px;
+  margin: 12px -4px;
   display: flex;
+  justify-content: space-between;
   li {
     flex: 1;
-    margin: 4px;
+    margin: 0 4px;
     position: relative;
-    border: 2px solid rgba(125, 125, 125, 0.2);
+    border: 2px solid @outlineColor;
+    background-color: @surfaceColor;
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       cursor: pointer;
-      position: relative;
-      //   box-sizing: border-box;
     }
     &.active {
       border-color: @primaryColor;
@@ -54,7 +68,7 @@ ul.product_banners {
       width: 100%;
       height: 100%;
       cursor: pointer;
-      background-color: rgba(0, 0, 0, 0.5);
+      background-color: rgba(0, 0, 0, 0.2);
     }
   }
 }
