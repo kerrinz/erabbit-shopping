@@ -4,18 +4,21 @@
       <span class="title">人气推荐</span>
       <span class="desc">人气爆款 不容错过</span>
     </div>
-    <ul v-if="result" class="goods">
-      <li v-for="item in result" :key="item.id" :style="{ width: `${100 / result.length}%` }">
-        <RouterLink :to="`/product/${item.id}`">
-          <img :src="item.picture" />
-          <p class="title">{{ item.title }}</p>
-          <p class="desc">{{ item.alt }}</p>
-        </RouterLink>
-      </li>
-    </ul>
-    <ul v-else class="goods">
+    <transition name="el-fade-in-linear">
+      <ul v-if="result" class="goods">
+        <li v-for="item in result" :key="item.id" :style="{ width: `${100 / result.length}%` }">
+          <RouterLink :to="`/product/${item.id}`">
+            <img :src="item.picture" />
+            <p class="title">{{ item.title }}</p>
+            <p class="desc">{{ item.alt }}</p>
+          </RouterLink>
+        </li>
+      </ul>
+    </transition>
+    <ul v-if="!result" class="goods">
       <li v-for="n in 4" :key="n">
-        <x-skeleton width="100%" height="100%"></x-skeleton>
+        <x-skeleton width="100%" height="280px"></x-skeleton>
+        <x-skeleton width="100%" height="6em" :animate="false"></x-skeleton>
       </li>
     </ul>
   </div>

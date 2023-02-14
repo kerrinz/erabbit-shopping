@@ -1,18 +1,26 @@
 <template>
-  <div class="banner">
-    <ul class="images" v-if="bannerList.length > 0">
+  <div v-if="bannerList.length > 0" class="banner" :style="{ width, height }">
+    <ul class="images">
       <li class="previous_item">
         <a
-          ><img @animationend="onAnimatedPrevious" :src="previousSrc" :style="{ animationName: previousAnimationName }"
+          ><img
+            @animationend="onAnimatedPrevious"
+            :src="previousSrc"
+            :style="{ animationName: previousAnimationName, height }"
         /></a>
       </li>
       <li class="current_item">
         <a :href="bannerList[lastIndex].href"
-          ><img @animationend="onAnimatedCurrent" :src="currentSrc" :style="{ animationName: currentAnimationName }"
+          ><img
+            @animationend="onAnimatedCurrent"
+            :src="currentSrc"
+            :style="{ animationName: currentAnimationName, height }"
         /></a>
       </li>
       <li class="next_item">
-        <a><img @animationend="onAnimatedNext" :src="nextSrc" :style="{ animationName: nextAnimationName }" /></a>
+        <a
+          ><img @animationend="onAnimatedNext" :src="nextSrc" :style="{ animationName: nextAnimationName, height }"
+        /></a>
       </li>
     </ul>
     <ul class="pagination">
@@ -30,6 +38,7 @@
       <el-icon><ArrowRight /></el-icon>
     </div>
   </div>
+  <XSkeleton v-else :width="width" :height="height" />
 </template>
 <script setup lang="ts">
 import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
@@ -44,9 +53,13 @@ const props = withDefaults(
   defineProps<{
     banners: CarouselBanner[];
     index: number;
+    width: string;
+    height: string;
   }>(),
   {
     index: 0,
+    width: "100%",
+    height: "100%",
   }
 );
 

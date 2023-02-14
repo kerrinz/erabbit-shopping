@@ -64,7 +64,9 @@
     <ul class="table_group">
       <li class="item">
         <span class="key">数量</span>
-        <span class="value"> <el-input-number v-model="counter" :min="1" :max="10" /></span>
+        <span class="value">
+          <el-input-number v-model="counter" :min="1" :max="10" @change="handleChangeCounter"
+        /></span>
       </li>
       <li class="item">
         <span class="key"></span>
@@ -79,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 
 // 规格组的单个选择项，需要 Array 组合成多个选择项
 interface OptionModel {
@@ -169,6 +171,15 @@ const selectedSkuProduct = computed(() => {
     return result;
   });
 });
+
+const handleChangeCounter = (current: number | undefined, old: number | undefined) => {
+  // 过滤不合法的输入值
+  if (!current && old) {
+    nextTick(() => {
+      counter.value = old;
+    });
+  }
+};
 
 // 点击了某个规格项
 const handleSelectOption = (option: OptionModel, groupName: string) => {

@@ -4,18 +4,21 @@
       <span class="title">新鲜好物</span>
       <span class="desc">新鲜出炉 品质靠谱</span>
     </div>
-    <ul v-if="result" class="goods">
-      <li v-for="item in result" :key="item.id" :style="{ width: `${100 / result.length}%` }">
-        <RouterLink :to="`/product/${item.id}`">
-          <img :src="item.picture" />
-          <p class="name">{{ item.name }}</p>
-          <p class="price">￥{{ item.price }}</p>
-        </RouterLink>
-      </li>
-    </ul>
-    <ul v-else class="goods">
+    <transition name="el-fade-in-linear">
+      <ul v-if="result" class="goods">
+        <li v-for="item in result" :key="item.id" :style="{ width: `${100 / result.length}%` }">
+          <RouterLink :to="`/product/${item.id}`">
+            <img :src="item.picture" />
+            <p class="name">{{ item.name }}</p>
+            <p class="price">￥{{ item.price }}</p>
+          </RouterLink>
+        </li>
+      </ul>
+    </transition>
+    <ul v-if="!result" class="goods">
       <li v-for="n in 4" :key="n">
-        <x-skeleton width="100%" height="100%"></x-skeleton>
+        <x-skeleton width="100%" height="280px"></x-skeleton>
+        <x-skeleton width="100%" height="6em" :animate="false"></x-skeleton>
       </li>
     </ul>
   </div>

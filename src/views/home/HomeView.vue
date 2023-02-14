@@ -1,6 +1,6 @@
 <template>
   <main class="container">
-    <x-carousel :banners="banners"></x-carousel>
+    <x-carousel :banners="banners" height="450px"></x-carousel>
     <!-- 新鲜好物 -->
     <HomeNewGoodsPreview />
     <!-- 人气推荐 -->
