@@ -10,12 +10,12 @@
         /></a>
       </li>
       <li class="current_item">
-        <a :href="bannerList[lastIndex].href"
+        <RouterLink :to="bannerList[lastIndex].href"
           ><img
             @animationend="onAnimatedCurrent"
             :src="currentSrc"
             :style="{ animationName: currentAnimationName, height }"
-        /></a>
+        /></RouterLink>
       </li>
       <li class="next_item">
         <a
@@ -46,6 +46,7 @@ import { computed, ref, watchEffect } from "vue";
 
 export interface CarouselBanner {
   image: string;
+  /** 路由路径 */
   href: string;
 }
 

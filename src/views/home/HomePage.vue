@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CarouselBanner } from "@/components/pageview/x-carousel.vue";
+import type { CarouselBanner } from "@/components/carousel/x-carousel.vue";
 import { ref } from "vue";
 import HomeNewGoodsPreview from "./widgets/HomeNewGoodsPreview.vue";
 import HomeRecommendPreview from "./widgets/HomeRecommendPreview.vue";

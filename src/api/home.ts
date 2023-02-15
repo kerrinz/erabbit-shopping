@@ -1,5 +1,5 @@
 import type { BannerModel } from "@/model/banner-model";
-import type { CommonGoods } from "@/model/common-model";
+import type { CommonGoods } from "@/model/goods-model";
 import type { RecommendItem } from "@/model/home-model";
 import { request } from "@/request/request";
 

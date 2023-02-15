@@ -80,9 +80,9 @@ baseAxios.interceptors.request.use(
     const accountStore = useAccountStore();
     // 本地存放的token
     const localAccessToken = accountStore.profile?.token;
-    // 无token，跳转登录
+    // 无token
     if (!localAccessToken) {
-      needLogin();
+      // needLogin();
       return config;
     }
     // 有token

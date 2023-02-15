@@ -2,15 +2,15 @@
   <div class="page-container">
     <el-breadcrumb v-if="product" class="breadcrumb" :separator-icon="ArrowRight">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item :to="`/categoy/${product.categories[1].id}`">{{
+      <el-breadcrumb-item :to="`/category/${product.categories[1].id}`">{{
         product.categories[1].name
       }}</el-breadcrumb-item>
-      <el-breadcrumb-item :to="`/categoy/sub/${product.categories[0].id}`">{{
+      <el-breadcrumb-item :to="`/category/sub/${product.categories[0].id}`">{{
         product.categories[0].name
       }}</el-breadcrumb-item>
       <el-breadcrumb-item>{{ product.name }}</el-breadcrumb-item>
     </el-breadcrumb>
-    <XSkeleton v-else height="2em" style="margin: 1em" :animate="false" />
+    <XSkeleton v-else height="2em" width="500px" style="margin: 1em" :animate="false" />
     <div class="info_pannel">
       <!-- 商品封面预览区 -->
       <ProductPreviews :banners="product?.mainPictures ?? []" />
@@ -25,13 +25,13 @@ import { findGoods } from "@/api/product";
 import { useRoute } from "vue-router";
 import ProductPreviews from "./widgets/ProductPreviews.vue";
 import ProductInformation from "./widgets/ProductInformation.vue";
-import type { ProductDetailModel } from "@/model/product-model";
+import type { GoodsDetailModel } from "@/model/product-model";
 import { ref } from "vue";
 
 // 商品id
 const id = useRoute().params.id.toString();
 const useGoodsDetail = () => {
-  const product = ref<ProductDetailModel | undefined>(undefined);
+  const product = ref<GoodsDetailModel | undefined>(undefined);
   findGoods(id).then((res) => {
     console.log(res.result);
     product.value = res.result;

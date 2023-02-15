@@ -217,7 +217,7 @@ const handleSelectOption = (option: OptionModel, groupName: string) => {
     .city_selector {
       margin: 0 10px;
       position: unset;
-      /deep/ .selector_panel {
+      :deep(.selector_panel) {
         width: 500px;
       }
     }

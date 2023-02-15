@@ -1,5 +1,16 @@
+/** 通用的商品小模型 */
+export interface GoodsModel {
+  id: string;
+  name: string;
+  desc: string;
+  orderNum: number | null;
+  picture: string;
+  price: string;
+  discount: number | null;
+}
+
 /** 商品详情数据 */
-export interface ProductDetailModel {
+export interface GoodsDetailModel {
   id: string;
   name: string;
   spuCode: string;

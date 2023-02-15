@@ -1,5 +1,5 @@
 // 提供商品相关的API函数
-import type { ProductDetailModel } from "@/model/product-model";
+import type { GoodsDetailModel } from "@/model/product-model";
 import { request } from "@/request/request";
 
 /**
@@ -7,7 +7,7 @@ import { request } from "@/request/request";
  * @param {String} id - 商品ID
  */
 export const findGoods = (id: string) => {
-  return request<ProductDetailModel>("get", "/goods", { id });
+  return request<GoodsDetailModel>("get", "/goods", { id });
 };
 
 /**
