@@ -30,7 +30,9 @@ declare module '@vue/runtime-core' {
     XCitySelector: typeof import('./components/selector/x-city-selector.vue')['default']
     XExhibitMagnifier: typeof import('./components/exhibit/x-exhibit-magnifier.vue')['default']
     XInfiniteLoading: typeof import('./components/loading/x-infinite-loading.vue')['default']
+    XInputNumber: typeof import('./components/input/x-input-number.vue')['default']
     XSkeleton: typeof import('./components/layout/x-skeleton.vue')['default']
+    XStaticCheckbox: typeof import('./components/form/x-static-checkbox.vue')['default']
     XThemeModeButton: typeof import('./components/buttons/x-theme-mode-button.vue')['default']
   }
 }

@@ -35,8 +35,35 @@ export interface GoodsDetailModel {
   mainVideos: [];
   videoScale: number;
   mainPictures: string[];
-  specs: [];
-  skus: [];
+  /** 库存商品列表 */
+  skus: {
+    id: string;
+    /** 库存 */
+    inventory: number;
+    oldPrice: string;
+    price: string;
+    skuCode: string;
+    // 该商品在全部规格组内对应的规格属性
+    specs: {
+      /** 所属规格组的组名 */
+      name: string;
+      /** 对应的规格值名，即选择项的名称 */
+      valueName: string;
+    }[];
+  }[];
+  /** 全部规格组 */
+  specs: {
+    /** 规格组的组名 */
+    name: string;
+    /** 某一个规格组的多个选择项 */
+    values: {
+      /** 规格名 */
+      name: string;
+      desc: string;
+      /** 显示的小封面图，如果为null则无图片请使用@param name */
+      picture: string | null;
+    }[];
+  }[];
   categories: _Categories[];
   details: {
     pictures: string[];

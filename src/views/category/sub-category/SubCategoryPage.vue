@@ -12,7 +12,22 @@
         <div class="group" v-for="group in subCategory?.saleProperties" :key="group.id">
           <span class="group_name">{{ group.name }}：</span>
           <ul class="options">
-            <li class="option" v-for="item in group.properties" :key="item.id">{{ item.name }}</li>
+            <li
+              class="option"
+              :class="{ active: !selectedMap.has(group.name) }"
+              @click="selectedMap.delete(group.name)"
+            >
+              全部
+            </li>
+            <li
+              class="option"
+              :class="{ active: selectedMap.get(group.name) == item.name }"
+              v-for="item in group.properties"
+              :key="item.id"
+              @click="selectedMap.set(group.name, item.name)"
+            >
+              {{ item.name }}
+            </li>
           </ul>
         </div>
       </div>
@@ -77,7 +92,7 @@
 
 <script setup lang="ts">
 import { ArrowRight } from "@element-plus/icons-vue";
-import { reactive, ref, watchPostEffect, watch } from "vue";
+import { reactive, ref, watch, watchPostEffect } from "vue";
 import { findSubCategoryFilter, findSubCategoryGoods } from "@/api/category";
 import { useRoute } from "vue-router";
 import type { FilterParams, SubCategory } from "@/model/category-model";
@@ -101,32 +116,29 @@ const subCategory = useCategory();
 // 筛选条件
 const filterCondition = reactive<FilterParams>({ categoryId: route.params.id, inventory: false } as FilterParams);
 
+// 选择的筛选条件（Map型）
+// 单独拎出来是为了减少性能消耗，会自动同步到 filterCondition 当中
+const selectedMap = reactive<Map<string, string>>(new Map());
+watch(selectedMap, () => {
+  const arr = [];
+  for (const key in selectedMap.keys) {
+    arr.push({ groupName: key, propertyName: selectedMap.get(key) });
+  }
+  filterCondition.attrs = arr;
+});
+
 // 单独把页码拎出来使用，以避免触发不该触发的筛选，以该页码为准
 const pageIndex = ref(1);
 
 // 筛选后的商品列表
 const useFilterGoods = () => {
   const goods = ref<GoodsModel[] | null>(null);
-  // 只是加载更多罢了
-  watch(pageIndex, () => {
-    // 哪有加载更多第一页的？（注：页码从1开始计算）
-    if (pageIndex.value == 1 || !goods.value) return;
-    findSubCategoryGoods({ ...filterCondition, page: pageIndex.value }).then((res) => {
-      if (res.result.items.length == 0) {
-        // 没有下一页了
-        infiniteLoadingStatus.value = LoadingStatus.notMore;
-      } else {
-        goods.value?.push(...res.result.items);
-        infiniteLoadingStatus.value = LoadingStatus.loading;
-      }
-    });
-  });
   // 其他筛选条件变了
   watchPostEffect(() => {
     goods.value = null;
     findSubCategoryGoods(filterCondition).then((res) => {
       goods.value = res.result.items;
-      pageIndex.value = 1; // 大胆改变，反正页码1已经做了判断，不会重复触发
+      pageIndex.value = 1; // 恢复初始页码
       infiniteLoadingStatus.value = LoadingStatus.loading;
     });
   });
@@ -136,9 +148,20 @@ const goods = useFilterGoods();
 
 const infiniteLoadingStatus = ref(LoadingStatus.loading);
 
+// 只是加载更多罢了
 const infiniteLoadingCallback = async () => {
-  console.log(filterCondition.page);
   pageIndex.value = pageIndex.value + 1;
+  // 哪有加载更多第一页的？（注：页码从1开始计算）
+  if (pageIndex.value == 1 || !goods.value) return;
+  findSubCategoryGoods({ ...filterCondition, page: pageIndex.value }).then((res) => {
+    if (res.result.items.length == 0) {
+      // 没有下一页了
+      infiniteLoadingStatus.value = LoadingStatus.notMore;
+    } else {
+      goods.value?.push(...res.result.items);
+      infiniteLoadingStatus.value = LoadingStatus.loading;
+    }
+  });
 };
 </script>
 <style lang="less" scoped>
@@ -172,6 +195,7 @@ const infiniteLoadingCallback = async () => {
         border-radius: 2px;
         border: 1px solid @outlineColor;
         transition: all.1s;
+        &.active,
         &:hover {
           color: @primaryColor;
           border-color: @primaryColor;

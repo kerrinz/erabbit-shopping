@@ -1,4 +1,4 @@
-// 无限加载组件，只要该组件进入视图就会触发回调函数
+// 无限加载组件，只要该组件进入视图就会触发回调函数；内部已经处理了重复触发，并且callback加载失败时会自动更改状态
 
 <template>
   <div class="x-infinite-loading" ref="target">
@@ -59,7 +59,7 @@ useIntersectionObserver(
       // 只要不是没有更多或者不是正在请求中，那就可以触发回调函数
       if (props.status != LoadingStatus.notMore && !isRequesting.value) {
         emit("update:status", LoadingStatus.loading);
-        props.callback();
+        props.callback().catch((_) => emit("update:status", LoadingStatus.failed));
       }
     }
   },
@@ -75,10 +75,6 @@ useIntersectionObserver(
     img {
       width: 100px;
     }
-  }
-  .not-more {
-  }
-  .failed {
   }
 }
 </style>

@@ -25,7 +25,7 @@ import { findGoods } from "@/api/product";
 import { useRoute } from "vue-router";
 import ProductPreviews from "./widgets/ProductPreviews.vue";
 import ProductInformation from "./widgets/ProductInformation.vue";
-import type { GoodsDetailModel } from "@/model/product-model";
+import type { GoodsDetailModel } from "@/model/goods-model";
 import { ref } from "vue";
 
 // 商品id

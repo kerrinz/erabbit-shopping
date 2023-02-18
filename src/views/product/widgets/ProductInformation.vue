@@ -61,17 +61,29 @@
       </ul>
     </template>
     <XSkeleton v-else height="200px" style="margin: 1em 0" />
+    <!-- 设置商品数量 -->
     <ul class="table_group">
       <li class="item">
         <span class="key">数量</span>
         <span class="value">
-          <el-input-number v-model="counter" :min="1" :max="10" @change="handleChangeCounter"
+          <el-input-number
+            v-model="counter"
+            :min="1"
+            :max="selectedSkuProduct?.inventory"
+            @change="handleChangeCounter"
         /></span>
       </li>
       <li class="item">
         <span class="key"></span>
         <span class="value">
-          <el-button class="btn_add_cart" type="primary" :disabled="selectedMap.size != props.data?.specs.length">
+          <!-- 添加购物车按钮 -->
+          <el-button
+            class="btn_add_cart"
+            type="primary"
+            :disabled="selectedMap.size != props.data?.specs.length"
+            :loading="isAddingCart"
+            @click="handleAddToCart"
+          >
             加入购物车
           </el-button>
         </span>
@@ -81,7 +93,12 @@
 </template>
 
 <script setup lang="ts">
+import { insertCart } from "@/api/cart";
+import useCartStore from "@/stores/cart";
 import { computed, nextTick, ref } from "vue";
+import { ElMessage } from "element-plus";
+import useAccountStore from "@/stores/account";
+import type { GoodsDetailModel } from "@/model/goods-model";
 
 // 规格组的单个选择项，需要 Array 组合成多个选择项
 interface OptionModel {
@@ -93,37 +110,7 @@ interface OptionModel {
 }
 
 const props = defineProps<{
-  data:
-    | {
-        name: string;
-        desc: string;
-        price: string;
-        oldPrice: string;
-        /** 库存商品列表 */
-        skus: {
-          id: string;
-          /** 库存 */
-          inventory: number;
-          oldPrice: string;
-          price: string;
-          skuCode: string;
-          // 该商品在全部规格组内对应的规格属性
-          specs: {
-            /** 所属规格组的组名 */
-            name: string;
-            /** 对应的规格值名，即选择项的名称 */
-            valueName: string;
-          }[];
-        }[];
-        /** 全部规格组 */
-        specs: {
-          /** 规格组的组名 */
-          name: string;
-          /** 某一个规格组的多个选择项 */
-          values: OptionModel[];
-        }[];
-      }
-    | undefined;
+  data: GoodsDetailModel | undefined;
 }>();
 
 const address = ref([
@@ -159,7 +146,7 @@ const selectedSkuProduct = computed(() => {
     // 存在没选择的规格组
     return null;
   }
-  return props.data.skus.find((product) => {
+  const item = props.data.skus.find((product) => {
     // 找到符合已选择的规格项 [selectedMap] 的商品
     let result = true;
     for (const item of product.specs) {
@@ -170,6 +157,7 @@ const selectedSkuProduct = computed(() => {
     }
     return result;
   });
+  return item;
 });
 
 const handleChangeCounter = (current: number | undefined, old: number | undefined) => {
@@ -184,6 +172,62 @@ const handleChangeCounter = (current: number | undefined, old: number | undefine
 // 点击了某个规格项
 const handleSelectOption = (option: OptionModel, groupName: string) => {
   selectedMap.value.set(groupName, option.name);
+};
+
+// 是否正在请求添加购物车
+const isAddingCart = ref(false);
+
+// 添加到购物车
+const handleAddToCart = () => {
+  if (!selectedSkuProduct.value || isAddingCart.value || !props.data) return;
+  isAddingCart.value = true;
+  if (useAccountStore().isLoggedIn) {
+    insertCart({
+      skuId: selectedSkuProduct.value.id,
+      count: counter.value,
+    })
+      .then((res) => {
+        useCartStore().insertCart(res.result);
+        ElMessage({
+          showClose: true,
+          message: `已加入购物车`,
+          type: "success",
+        });
+      })
+      .catch((err) => {
+        ElMessage({
+          showClose: true,
+          message: `加入购物车失败！`,
+          type: "error",
+        });
+        console.log(err);
+      })
+      .finally(() => (isAddingCart.value = false));
+  } else {
+    const { skuCode, specs, inventory: stock } = selectedSkuProduct.value;
+    const { id, name, price, mainPictures, isCollect, discount } = props.data;
+    useCartStore().insertCart({
+      id,
+      name,
+      picture: mainPictures[0],
+      price,
+      count: counter.value,
+      skuId: skuCode,
+      attrsText: specs.reduce<string>((p, c) => `${p} ${c.name}:${c.valueName}}`, ""),
+      nowPrice: price,
+      stock,
+      isCollect,
+      discount,
+      isEffective: true,
+      selected: true,
+    });
+    isAddingCart.value = false;
+    ElMessage({
+      showClose: true,
+      message: `已加入购物车`,
+      type: "success",
+    });
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -304,14 +348,13 @@ const handleSelectOption = (option: OptionModel, groupName: string) => {
 .btn_add_cart {
   padding: 20px 40px;
   font-size: 1em;
-  cursor: pointer;
-  &:focus {
+  &:not(:disabled):focus {
     background-color: var(--el-button-bg-color);
   }
-  &:hover {
+  &:not(:disabled):hover {
     background-color: var(--el-button-hover-bg-color);
   }
-  &:active {
+  &:not(:disabled):active {
     background-color: var(--el-button-active-bg-color);
   }
 }

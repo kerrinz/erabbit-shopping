@@ -9,6 +9,11 @@ const useAccountStore = defineStore(ModulesEnum.account.toString(), {
       profile: null as LoginModel | null,
     };
   },
+  getters: {
+    /** 是否已登录 */
+    isLoggedIn: (state) => state.profile?.token != null,
+  },
+
   actions: {
     setAccount(account: string, profile: LoginModel) {
       this.profile = profile;

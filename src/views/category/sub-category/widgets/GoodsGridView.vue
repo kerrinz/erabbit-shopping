@@ -1,22 +1,28 @@
 <template>
-  <div v-if="goods == null" class="hint">
-    <img src="@/assets/icons/loading-blocks.gif" />
-  </div>
-  <div v-else-if="goods.length == 0" class="hint">
-    <el-empty class="empty" description="没有符合条件的商品呢" />
-  </div>
-  <div v-else class="goods-grid-container">
-    <BGoodsItem
-      class="goods-grid-item"
-      v-for="item in props.goods"
-      :key="item.id"
-      :name="item.name"
-      :desc="item.desc"
-      :image="item.picture"
-      :price="item.price"
-      :route-to="`/product/i${item.id}`"
-    />
-  </div>
+  <transition name="el-fade-in">
+    <div v-if="goods == null" class="hint">
+      <img src="@/assets/icons/loading-blocks.gif" />
+    </div>
+  </transition>
+  <transition name="el-fade-in">
+    <div v-if="goods && goods.length == 0" class="hint">
+      <el-empty class="empty" description="没有符合条件的商品呢" />
+    </div>
+  </transition>
+  <transition name="el-fade-in">
+    <div v-if="goods && goods.length > 0" class="goods-grid-container">
+      <BGoodsItem
+        class="goods-grid-item"
+        v-for="item in props.goods"
+        :key="item.id"
+        :name="item.name"
+        :desc="item.desc"
+        :image="item.picture"
+        :price="item.price"
+        :route-to="`/product/i${item.id}`"
+      />
+    </div>
+  </transition>
 </template>
 
 <script setup lang="ts">

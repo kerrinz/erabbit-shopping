@@ -27,9 +27,9 @@
 <script setup lang="ts">
 import { findNew } from "@/api/home";
 import { useLazyload } from "@/hooks/lazyload-hook";
-import type { CommonGoods } from "@/model/goods-model";
+import type { GoodsModel } from "@/model/goods-model";
 
-const { result, dom } = useLazyload<CommonGoods[]>(async () => {
+const { result, dom } = useLazyload<GoodsModel[]>(async () => {
   const res = await findNew();
   return res.result;
 });

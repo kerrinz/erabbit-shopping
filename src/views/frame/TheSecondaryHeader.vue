@@ -1,7 +1,8 @@
 <template>
   <div class="header-secondary">
     <el-container class="container">
-      <div class="banner">百货商城</div>
+      <div class="banner">Erabbit商城</div>
+      <!-- 分类 -->
       <ul class="categories">
         <li>
           <router-link to="/"><el-link class="text">首页</el-link></router-link>
@@ -25,7 +26,7 @@
               <ul v-if="activeIndex == index">
                 <li v-for="sub in categories[activeIndex].children" :key="sub.id">
                   <router-link @click="hideSubNav" :to="`/category/sub/${sub.id}`">
-                    <img :src="sub.picture" :alt="sub.name" />
+                    <img :src="sub.picture!" :alt="sub.name" />
                     <div class="title">{{ sub.name }}</div>
                   </router-link>
                 </li>
@@ -34,6 +35,14 @@
           </div>
         </li>
       </ul>
+      <!-- 购物车按钮 -->
+      <RouterLink class="cart" to="/cart">
+        <el-icon class="icon" size="20px">
+          <ShoppingCart />
+          <span class="hint">{{ cartCount }}</span>
+        </el-icon>
+        <span class="text">购物车</span>
+      </RouterLink>
     </el-container>
   </div>
 </template>
@@ -41,7 +50,8 @@
 <script setup lang="ts">
 import { findNavCategory } from "@/api/category";
 import { ref } from "vue";
-import type { NavCategory } from "@/model/category-model";
+import type { MainCategory } from "@/model/category-model";
+import { useCartCount } from "@/hooks/cart-hook";
 
 // 是否显示子分类
 const isShowLayer = ref(false);
@@ -49,7 +59,7 @@ const isShowLayer = ref(false);
 const activeIndex = ref(-1);
 
 const useCategories = () => {
-  const categories = ref([] as NavCategory[]);
+  const categories = ref([] as MainCategory[]);
   findNavCategory().then((res) => {
     categories.value = res.result;
   });
@@ -65,6 +75,9 @@ const showSubNav = (index: number) => {
 };
 // 隐藏子分类框
 const hideSubNav = () => (isShowLayer.value = false);
+
+// 购物车商品数量
+const { count: cartCount } = useCartCount();
 </script>
 
 <style lang="less" scoped>
@@ -134,7 +147,7 @@ const hideSubNav = () => (isShowLayer.value = false);
   margin-top: 16px;
   width: 100%;
   background-color: @surfaceColor;
-  box-shadow: 0 0 4px rgba(100, 100, 100, 0.33);
+  box-shadow: 0 0 4px rgba(150, 150, 150, 0.4);
   transition: all 0.2s 0.1s;
   ul {
     display: flex;
@@ -157,6 +170,42 @@ const hideSubNav = () => (isShowLayer.value = false);
         }
       }
     }
+  }
+}
+.cart {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  border: 1px solid rgba(150, 150, 150, 0.4);
+  cursor: pointer;
+  transition: all.2s;
+  &.active,
+  &:hover {
+    color: @primaryColor;
+    border-color: @primaryColor;
+  }
+  > .icon {
+    position: relative;
+    > .hint {
+      display: inline-block;
+      position: absolute;
+      top: -10px;
+      left: 100%;
+      padding: 0 4px;
+      font-size: 12px;
+      line-height: 14px;
+      font-style: normal;
+      font-weight: bold;
+      font-family: Arial, Helvetica, sans-serif;
+      color: white;
+      background-color: red;
+      border-radius: 20px;
+    }
+  }
+  > .text {
+    margin-left: 16px;
+    font-size: 15px;
   }
 }
 </style>

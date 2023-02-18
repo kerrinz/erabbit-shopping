@@ -1,5 +1,5 @@
 import type { BannerModel } from "@/model/banner-model";
-import type { CommonGoods } from "@/model/goods-model";
+import type { GoodsModel } from "@/model/goods-model";
 import type { RecommendItem } from "@/model/home-model";
 import { request } from "@/request/request";
 
@@ -23,7 +23,7 @@ export const findBanner = () => {
 /**
  * 获取新鲜好物
  */
-export const findNew = () => request<CommonGoods[]>("get", "/home/new");
+export const findNew = () => request<GoodsModel[]>("get", "/home/new");
 
 /**
  * 获取人气推荐

@@ -1,5 +1,5 @@
 // 提供商品相关的API函数
-import type { GoodsDetailModel } from "@/model/product-model";
+import type { GoodsDetailModel } from "@/model/goods-model";
 import { request } from "@/request/request";
 
 /**
