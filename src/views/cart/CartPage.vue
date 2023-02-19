@@ -105,16 +105,7 @@ const handleRemove = (id: string) => {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
-  })
-    .then(() => {
-      doRemove([id]);
-    })
-    .catch(() => {
-      ElMessage({
-        type: "info",
-        message: "Delete canceled",
-      });
-    });
+  }).then(() => doRemove([id]));
 };
 </script>
 

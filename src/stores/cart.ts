@@ -36,6 +36,12 @@ const useCartStore = defineStore(ModulesEnum.cart.toString(), {
     clearCartList() {
       this.cartList = [];
     },
+    /** 加入本地购物车（仅限未登录使用） */
+    async insertCart(item: CartModel) {
+      if (!useAccountStore().isLoggedIn) {
+        this.cartList.unshift(item);
+      }
+    },
     /** 将本地购物车合并到远程，并清空本地购物车 */
     async mergeCart() {
       const data = this.cartList.map((item) => {

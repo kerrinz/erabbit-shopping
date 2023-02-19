@@ -182,6 +182,7 @@ const handleAddToCart = () => {
   if (!selectedSkuProduct.value || isAddingCart.value || !props.data) return;
   isAddingCart.value = true;
   if (useAccountStore().isLoggedIn) {
+    // 已登录，加入远程购物车
     insertCart({
       skuId: selectedSkuProduct.value.id,
       count: counter.value,
@@ -204,9 +205,10 @@ const handleAddToCart = () => {
       })
       .finally(() => (isAddingCart.value = false));
   } else {
+    // 未登录，加入本地购物车
     const { skuCode, specs, inventory: stock } = selectedSkuProduct.value;
     const { id, name, price, mainPictures, isCollect, discount } = props.data;
-    useCartStore().insertCart({
+    const newCartItem = {
       id,
       name,
       picture: mainPictures[0],
@@ -220,7 +222,9 @@ const handleAddToCart = () => {
       discount,
       isEffective: true,
       selected: true,
-    });
+    };
+    // 加入本地购物车
+    useCartStore().insertCart(newCartItem);
     isAddingCart.value = false;
     ElMessage({
       showClose: true,

@@ -19,7 +19,7 @@
         :desc="item.desc"
         :image="item.picture"
         :price="item.price"
-        :route-to="`/product/i${item.id}`"
+        :route-to="`/product/${item.id}`"
       />
     </div>
   </transition>
