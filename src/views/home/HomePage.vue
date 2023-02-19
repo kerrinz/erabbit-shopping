@@ -1,6 +1,7 @@
 <template>
-  <main class="container">
-    <x-carousel :banners="banners" height="450px"></x-carousel>
+  <main class="page-container">
+    <HomeCategoryBanner :categories="categories" :banners="bannerList" />
+    <!-- <x-carousel :banners="bannerList" height="450px" /> -->
     <!-- 新鲜好物 -->
     <HomeNewGoodsPreview />
     <!-- 人气推荐 -->
@@ -9,27 +10,35 @@
 </template>
 
 <script setup lang="ts">
-import type { CarouselBanner } from "@/components/carousel/x-carousel.vue";
 import { ref } from "vue";
 import HomeNewGoodsPreview from "./widgets/HomeNewGoodsPreview.vue";
 import HomeRecommendPreview from "./widgets/HomeRecommendPreview.vue";
 import { findBanner } from "@/api/home";
+import HomeCategoryBanner from "./widgets/HomeCategoryBanner.vue";
+import { findNavCategory } from "@/api/category";
+import type { MainCategory } from "@/model/category-model";
+
+const useCategories = () => {
+  const categories = ref<MainCategory[]>();
+  findNavCategory().then((res) => (categories.value = res.result));
+  return { categories };
+};
 
 const useBannerList = () => {
-  const bannerList = ref<CarouselBanner[]>([]);
+  const bannerList = ref<{ image: string; href: string }[]>([]);
   findBanner().then((res) => {
     bannerList.value = res.result.map((value) => {
       return { image: value.imgUrl, href: value.hrefUrl };
     });
   });
-  return bannerList;
+  return { bannerList };
 };
-const banners = useBannerList();
+
+const { bannerList } = useBannerList();
+const { categories } = useCategories();
 </script>
 
 <style lang="less" scoped>
-.container {
-  .page-container();
-  margin: auto;
+main {
 }
 </style>

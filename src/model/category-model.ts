@@ -6,6 +6,7 @@ export interface MainCategory {
   name: string;
   picture: null;
   children: SubCategory[];
+  goods: null | GoodsModel[];
 }
 
 /** 二级分类 */
@@ -15,7 +16,7 @@ export interface SubCategory {
   picture: string | null;
   parentId: string | null;
   parentName: string | null;
-  goods: GoodsModel[];
+  goods: null | GoodsModel[];
   categories:
     | null
     | {

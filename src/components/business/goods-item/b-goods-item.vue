@@ -1,14 +1,16 @@
 // 商品项（用于商品网格列表中显示）
 <template>
   <RouterLink class="b-goods-item" :to="props.routeTo">
-    <img :src="props.image" />
-    <div class="name">
-      <span>{{ props.name }}</span>
+    <img class="cover" :src="props.image" />
+    <div class="info">
+      <div class="name">
+        <span>{{ props.name }}</span>
+      </div>
+      <div class="desc">
+        <span>{{ props.desc }}</span>
+      </div>
+      <div class="price"><small>￥</small>{{ props.price }}</div>
     </div>
-    <div class="desc">
-      <span>{{ props.desc }}</span>
-    </div>
-    <div class="price"><small>￥</small>{{ props.price }}</div>
   </RouterLink>
 </template>
 

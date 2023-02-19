@@ -44,15 +44,13 @@
 import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
 import { computed, ref, watchEffect } from "vue";
 
-export interface CarouselBanner {
-  image: string;
-  /** 路由路径 */
-  href: string;
-}
-
 const props = withDefaults(
   defineProps<{
-    banners: CarouselBanner[];
+    banners: {
+      image: string;
+      /** 路由路径 */
+      href: string;
+    }[];
     index: number;
     width: string;
     height: string;
