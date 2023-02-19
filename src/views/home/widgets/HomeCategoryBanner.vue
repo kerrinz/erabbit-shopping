@@ -28,20 +28,22 @@
     <!-- 子面板 -->
     <div v-if="activeIndex >= 0 && props.categories" class="sub_panel">
       <h3 class="title">分类推荐</h3>
-      <ul class="goods_list">
-        <li v-for="item in props.categories[activeIndex].goods" :key="item.id">
-          <!-- <span class="first">{{ item.name }}</span>
+      <template v-for="(cate, index) in props.categories" :key="cate.id">
+        <ul v-show="index == activeIndex" class="goods_list">
+          <li v-for="item in props.categories[activeIndex].goods" :key="item.id">
+            <!-- <span class="first">{{ item.name }}</span>
           <span class="sub" v-for="sub in item.children" :key="sub.id">{{ sub.name }}</span> -->
-          <BGoodsItem
-            class="goods_item"
-            :image="item.picture"
-            :name="item.name"
-            :desc="item.desc"
-            :price="item.price"
-            :route-to="`/product/${item.id}`"
-          />
-        </li>
-      </ul>
+            <BGoodsItem
+              class="goods_item"
+              :image="item.picture"
+              :name="item.name"
+              :desc="item.desc"
+              :price="item.price"
+              :route-to="`/product/${item.id}`"
+            />
+          </li>
+        </ul>
+      </template>
     </div>
   </div>
 </template>
@@ -133,38 +135,45 @@ const onLeaveBox = () => {
   top: 0;
   right: 0;
   bottom: 0;
-  // background-color: rgba(0, 0, 0, 0.5);
   background-color: @surfaceColor;
-  // box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
   border: 1px solid @primaryColor;
-  padding: 16px 20px;
+  padding: 16px 24px;
   .title {
     font-weight: normal;
     color: @text1Color;
   }
+  // 商品列表
   .goods_list {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 8px;
+    column-gap: 12px;
+    margin: auto;
     .goods_item {
-      // width: 80px;
       display: flex;
       flex-direction: row;
       text-align: left;
       align-items: center;
-      /deep/ img {
-        margin: 4px 8px;
-        width: 100px;
-        height: 100px;
+      transition: background.1s;
+      &:hover {
+        /deep/ .info > .name {
+          color: @primaryColor;
+        }
+      }
+      // 深层覆盖样式
+      /deep/ .cover-box {
+        img {
+          width: 100px;
+          height: 100px;
+        }
       }
       /deep/ .info {
         padding-left: 8px;
         > .name {
+          transition: color.1s;
           white-space: unset;
           max-height: 38px;
-        }
-        > div {
-          // padding: 0;
         }
       }
     }

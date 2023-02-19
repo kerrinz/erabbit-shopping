@@ -1,7 +1,9 @@
 // 商品项（用于商品网格列表中显示）
 <template>
   <RouterLink class="b-goods-item" :to="props.routeTo">
-    <img class="cover" :src="props.image" />
+    <div class="cover-box">
+      <img class="cover" :src="props.image" />
+    </div>
     <div class="info">
       <div class="name">
         <span>{{ props.name }}</span>
@@ -32,10 +34,14 @@ const props = defineProps<{
 .b-goods-item {
   text-align: center;
   display: inline-block;
-  img {
-    width: 100%;
-    // max-height: 80%;
-    object-fit: cover;
+  .cover-box {
+    background-color: white;
+    font-size: 0;
+    img {
+      width: 100%;
+      // max-height: 80%;
+      object-fit: cover;
+    }
   }
   .name {
     font-size: 16px;
