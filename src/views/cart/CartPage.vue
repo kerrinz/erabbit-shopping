@@ -10,8 +10,7 @@
         <thead>
           <tr>
             <th>
-              <!-- <el-checkbox label="全选" name="check_all" size="large" :checked="isCheckAll" /> -->
-              <XStaticCheckbox :value="isCheckAll" label="全选" />
+              <XStaticCheckbox :value="isCheckAll" :label="`全选（${totalValid}）`" @onTap="doCheckAll(isCheckAll)" />
             </th>
             <th>商品信息</th>
             <th>单价</th>
@@ -22,37 +21,27 @@
         </thead>
         <transition name="el-fade-in-linear">
           <tbody v-if="loadingState == LoadingState.success">
-            <tr v-for="item in cartList" :key="item.id">
-              <td>
-                <XStaticCheckbox
-                  :value="item.selected"
-                  @onTap="(value) => updateItem({ skuId: item.skuId, selected: !item.selected, count: item.count })"
-                />
-              </td>
-              <td class="goods">
-                <RouterLink :to="`/product/${item.id}`">
-                  <img :src="item.picture" />
-                  <span>
-                    <div class="name">{{ item.name }}</div>
-                    <div class="attrs">{{ item.attrsText }}</div>
-                  </span>
-                </RouterLink>
-              </td>
-              <td><small>￥</small>{{ item.nowPrice }}</td>
-              <!-- <td>{{ item.count }}</td> -->
-              <td>
-                <el-input-number
-                  v-model="item.count"
-                  :min="1"
-                  :max="12"
-                  @change="(prev) => handleChangeCount(prev, item.skuId)"
-                />
-              </td>
-              <td class="price"><small>￥</small>{{ (item.nowPrice * item.count).toFixed(2) }}</td>
-              <td>
-                <el-button type="primary" text>删除</el-button>
-              </td>
+            <!-- 商品项 -->
+            <CartTableItem
+              v-for="item in validList"
+              :key="item.id"
+              :value="item"
+              @tapCheckbox="doUpdateItem({ skuId: item.skuId, selected: !item.selected, count: item.count })"
+              @changeCount="(prev) => handleChangeCount(prev ?? 1, item.skuId)"
+              @clickRemove="(prev) => handleRemove(item.skuId)"
+            />
+            <tr v-if="invalidList.length > 0">
+              <td colspan="6" class="invalid_head"><h3>失效商品</h3></td>
             </tr>
+            <!-- 商品项 -->
+            <CartTableItem
+              v-for="item in invalidList"
+              :key="item.id"
+              :value="item"
+              @tapCheckbox="doUpdateItem({ skuId: item.skuId, selected: !item.selected, count: item.count })"
+              @changeCount="(prev) => handleChangeCount(prev ?? 1, item.skuId)"
+              @clickRemove="(prev) => handleRemove(item.skuId)"
+            />
           </tbody>
         </transition>
       </table>
@@ -65,8 +54,14 @@
     </div>
     <!-- 结算区域 -->
     <div class="panel result_panel">
-      <div class="left"></div>
+      <div class="left">
+        <XStaticCheckbox :value="isCheckAll" :label="`全选（${totalValid}）`" @onTap="doCheckAll(isCheckAll)" />
+        <span class="statistics">已选择 {{ totalSelected }} 件</span>
+      </div>
       <div class="right">
+        <span class="price">
+          总价：<small>￥</small><em>{{ selectedAmount }}</em>
+        </span>
         <el-button class="btn_cart_order" type="primary">下单结算</el-button>
       </div>
     </div>
@@ -76,35 +71,53 @@
 <script setup lang="ts">
 import { ArrowRight } from "@element-plus/icons-vue";
 import { useCartList } from "@/hooks/cart-hook";
-import { ref, watch } from "vue";
 import { LoadingState } from "@/model/emun";
-import { updateCart } from "@/api/cart";
-import useAccountStore from "@/stores/account";
-import useCartStore from "@/stores/cart";
+import CartTableItem from "./widgets/CartTableItem.vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 
 const {
   loadingState,
   cartList,
   validList,
   invalidList,
-  validAmount,
-  selectedList,
   totalSelected,
+  totalValid,
   selectedAmount,
   isCheckAll,
-  updateItem,
+  doUpdateItem,
+  doCheckAll,
+  doRemove,
 } = useCartList();
 
-const count = 0;
-
+// 改变商品数量
 const handleChangeCount = async (count: number, skuId: string) => {
-  await updateItem({
+  await doUpdateItem({
     skuId,
     selected: undefined,
     count,
   });
 };
+
+// 删除商品
+const handleRemove = (id: string) => {
+  console.log(id);
+  ElMessageBox.confirm("确认删除所选商品吗？", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(() => {
+      doRemove([id]);
+    })
+    .catch(() => {
+      ElMessage({
+        type: "info",
+        message: "Delete canceled",
+      });
+    });
+};
 </script>
+
 <style lang="less" scoped>
 .breadcrumb {
   margin: 2em 1em;
@@ -120,9 +133,11 @@ const handleChangeCount = async (count: number, skuId: string) => {
   border-spacing: 0;
   border-collapse: collapse;
   line-height: 24px;
-  padding: 0 2em;
+  padding: 0 1em;
   table {
     width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
     thead {
       th {
         font-size: 1em;
@@ -130,62 +145,59 @@ const handleChangeCount = async (count: number, skuId: string) => {
         line-height: 60px;
         text-align: center;
         &:first-child {
+          width: 100px;
           text-align: left;
+          padding-left: 14px;
         }
       }
     }
     tbody {
       tr {
-        td {
-          text-align: center;
-          padding: 12px 24px;
-          color: @text3Color;
-          &:first-child {
-            text-align: left;
-            padding-left: 0;
-          }
-          &.goods {
-            text-align: left;
-            img {
-              height: 85px;
-              width: 85px;
-              vertical-align: middle;
-              &:hover {
-                cursor: pointer;
-              }
-            }
-            > a > span {
-              display: inline-block;
-              padding-left: 12px;
-              vertical-align: middle;
-              transition: color.2s;
-              &:hover {
-                color: @primaryColor;
-                cursor: pointer;
-              }
-              .attrs {
-                color: @text6Color;
-              }
-            }
-          }
-          &.price {
-            color: @priceColor;
+        border-bottom: 1px solid rgba(150, 150, 150, 0.15);
+        td.invalid_head {
+          padding: 8px 1em;
+          > h3 {
+            font-size: 1em;
           }
         }
       }
     }
   }
 }
+// 表格下方的操作栏
 .result_panel {
   display: flex;
   padding: 1em 2em;
+  align-items: center;
   .left {
     flex: 1;
+    > * {
+      vertical-align: middle;
+    }
+    > .statistics {
+      margin-left: 1em;
+    }
   }
   .right {
+    .price {
+      vertical-align: middle;
+      margin-right: 20px;
+      > small {
+        font-size: 20px;
+        color: @priceColor;
+      }
+      > em {
+        color: @priceColor;
+        font-size: 30px;
+        font-style: normal;
+        font-family: Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei,
+          sans-serif;
+      }
+    }
     .btn_cart_order {
       font-size: 1em;
       padding: 20px 50px;
+      vertical-align: middle;
     }
   }
 }

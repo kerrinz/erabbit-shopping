@@ -1,6 +1,6 @@
 <template>
-  <div class="header-secondary">
-    <el-container class="container">
+  <header class="header-secondary">
+    <section class="container">
       <div class="banner">Erabbit商城</div>
       <!-- 分类 -->
       <ul class="categories">
@@ -43,8 +43,8 @@
         </el-icon>
         <span class="text">购物车</span>
       </RouterLink>
-    </el-container>
-  </div>
+    </section>
+  </header>
 </template>
 
 <script setup lang="ts">
@@ -82,7 +82,6 @@ const { count: cartCount } = useCartCount();
 
 <style lang="less" scoped>
 .header-secondary {
-  width: 100%;
   height: 100px;
   background-color: @surfaceColor;
   transition: background.3s;
@@ -92,6 +91,8 @@ const { count: cartCount } = useCartCount();
     align-items: center;
     position: relative;
     height: inherit;
+    padding: 0 20px;
+    box-sizing: border-box;
     > .banner {
       display: inline-block;
       height: 80px;

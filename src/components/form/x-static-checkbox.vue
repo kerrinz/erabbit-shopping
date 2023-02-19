@@ -1,3 +1,4 @@
+// 不含input的多选框，状态由外部改变
 <template>
   <span class="x-static-checkbox" :class="{ active: checked }" @click="$emit('onTap', checked)">
     <span class="icon">
@@ -13,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRef, watch } from "vue";
+import { toRef } from "vue";
 
 const props = withDefaults(
   defineProps<{
@@ -24,13 +25,12 @@ const props = withDefaults(
     label: undefined,
   }
 );
-const emit = defineEmits<{
+defineEmits<{
   (e: "onTap"): ((prev: boolean) => void) | undefined;
   "update:value": () => void | undefined;
 }>();
 
 const checked = toRef(props, "value");
-watch(checked, () => console.log(checked.value));
 </script>
 <style lang="less" scoped>
 .x-static-checkbox {
@@ -43,7 +43,6 @@ watch(checked, () => console.log(checked.value));
   &.active {
     .icon {
       background-color: @primaryColor;
-      border-radius: 2px;
       > svg {
         visibility: visible;
       }
@@ -54,6 +53,7 @@ watch(checked, () => console.log(checked.value));
     width: 14px;
     height: 14px;
     border: 1px solid @primaryColor;
+    border-radius: 2px;
     > svg {
       visibility: hidden;
       fill: @onPrimaryColor;

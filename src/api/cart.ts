@@ -50,8 +50,8 @@ export const updateCart = (data: { skuId: string; selected: boolean | undefined;
  * @param {Boolean} selected - 选中状态
  * @param {Array<string>} ids - skuId 的集合
  */
-export const checkAllCart = (data: { selected: string; ids: Array<string> }) => {
-  return request("put", "/member/cart/selected", data);
+export const checkAllCart = (data: { selected: boolean; ids: Array<string> }) => {
+  return request<null>("put", "/member/cart/selected", data);
 };
 
 /**

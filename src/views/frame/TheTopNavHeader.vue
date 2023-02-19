@@ -1,6 +1,6 @@
 <template>
-  <el-header class="toolbar">
-    <el-container class="container">
+  <header class="toolbar">
+    <section class="container">
       <x-theme-mode-button />
       <div class="actions">
         <nav>
@@ -19,8 +19,8 @@
           <li><a class="link" href="#">关于我们</a></li>
         </nav>
       </div>
-    </el-container>
-  </el-header>
+    </section>
+  </header>
 </template>
 
 <script setup lang="ts">
@@ -47,7 +47,6 @@ const handleLogout = () => {
 
 .toolbar {
   background-color: #3d3d3d;
-  width: 100%;
   height: 50px;
   .container {
     .page-container();
@@ -55,6 +54,8 @@ const handleLogout = () => {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
     .brand {
       float: left;
       color: #ddd;

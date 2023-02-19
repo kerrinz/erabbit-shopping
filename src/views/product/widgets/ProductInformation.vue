@@ -186,8 +186,8 @@ const handleAddToCart = () => {
       skuId: selectedSkuProduct.value.id,
       count: counter.value,
     })
-      .then((res) => {
-        useCartStore().insertCart(res.result);
+      .then(() => {
+        useCartStore().addValidCount(counter.value);
         ElMessage({
           showClose: true,
           message: `已加入购物车`,
