@@ -9,10 +9,17 @@
           v-for="(item, index) in props.categories"
           :class="{ active: activeIndex == index }"
           :key="item.id"
-          @mousemove="onMoveCategory(index)"
+          @mouseenter="onEnterCategory(index)"
         >
-          <span class="first">{{ item.name }}</span>
-          <span class="sub" v-for="sub in item.children" :key="sub.id">{{ sub.name }}</span>
+          <!-- 一级分类 -->
+          <span class="first">
+            <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
+          </span>
+          <!-- 二级分类 -->
+          <span class="sub" v-for="sub in item.children.slice(0, 2)" :key="sub.id">
+            <RouterLink :to="`/category/sub/${sub.id}`">{{ sub.name }}</RouterLink>
+            &nbsp;
+          </span>
         </li>
         <!-- <li>
           <span class="first">品牌</span>
@@ -28,22 +35,18 @@
     <!-- 子面板 -->
     <div v-if="activeIndex >= 0 && props.categories" class="sub_panel">
       <h3 class="title">分类推荐</h3>
-      <template v-for="(cate, index) in props.categories" :key="cate.id">
-        <ul v-show="index == activeIndex" class="goods_list">
-          <li v-for="item in props.categories[activeIndex].goods" :key="item.id">
-            <!-- <span class="first">{{ item.name }}</span>
-          <span class="sub" v-for="sub in item.children" :key="sub.id">{{ sub.name }}</span> -->
-            <BGoodsItem
-              class="goods_item"
-              :image="item.picture"
-              :name="item.name"
-              :desc="item.desc"
-              :price="item.price"
-              :route-to="`/product/${item.id}`"
-            />
-          </li>
-        </ul>
-      </template>
+      <ul class="goods_list">
+        <li v-for="item in props.categories[activeIndex].goods" :key="item.id">
+          <BGoodsItem
+            class="goods_item"
+            :image="`${item.picture}?imageView&thumbnail=78x78&quality=95`"
+            :name="item.name"
+            :desc="item.desc"
+            :price="item.price"
+            :route-to="`/product/${item.id}`"
+          />
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -68,7 +71,7 @@ const props = defineProps<{
 const activeIndex = ref(-1);
 
 // 移入分类项
-const onMoveCategory = (index: number) => {
+const onEnterCategory = (index: number) => {
   activeIndex.value = index;
 };
 
@@ -115,12 +118,12 @@ const onLeaveBox = () => {
       > span {
         display: inline-block;
       }
-      .first {
+      .first a {
         color: #fff;
         font-size: 16px;
         margin-right: 8px;
       }
-      .sub {
+      .sub a {
         color: #eee;
         font-size: 14px;
       }
@@ -157,18 +160,18 @@ const onLeaveBox = () => {
       align-items: center;
       transition: background.1s;
       &:hover {
-        /deep/ .info > .name {
+        :deep(.info > .name) {
           color: @primaryColor;
         }
       }
       // 深层覆盖样式
-      /deep/ .cover-box {
+      :deep(.cover-box) {
         img {
           width: 100px;
           height: 100px;
         }
       }
-      /deep/ .info {
+      :deep(.info) {
         padding-left: 8px;
         > .name {
           transition: color.1s;

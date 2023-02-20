@@ -1,7 +1,7 @@
 <template>
   <main class="page-container">
+    <!-- 分类 + 轮播图 -->
     <HomeCategoryBanner :categories="categories" :banners="bannerList" />
-    <!-- <x-carousel :banners="bannerList" height="450px" /> -->
     <!-- 新鲜好物 -->
     <HomeNewGoodsPreview />
     <!-- 人气推荐 -->
@@ -38,7 +38,4 @@ const { bannerList } = useBannerList();
 const { categories } = useCategories();
 </script>
 
-<style lang="less" scoped>
-main {
-}
-</style>
+<style lang="less" scoped></style>
