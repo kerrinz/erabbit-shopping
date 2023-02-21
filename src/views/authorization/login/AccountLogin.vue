@@ -108,9 +108,7 @@ const rules = reactive<FormRules>({
 const submitForm = (fr: FormInstance | undefined) => {
   if (!fr) return;
   fr.validate((valid) => {
-    if (!valid) {
-      console.log("请检查账号或者密码是否正确!");
-    } else {
+    if (valid) {
       login();
     }
   });
@@ -120,7 +118,6 @@ const submitForm = (fr: FormInstance | undefined) => {
 const login = () => {
   doLogin(form.name, form.pass)
     .then((res) => {
-      console.log(res);
       if (res.status == 200) {
         ElMessage({
           showClose: true,

@@ -3,6 +3,14 @@ import FrameLayout from "@/views/frame/FrameLayout.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
+  // 切换路由时自动滚动到顶部
+  // scrollBehavior() {
+  //   return { left: 0, top: 0 };
+  // },
+  scrollBehavior(to, from, savedPosition) {
+    console.log(savedPosition);
+    return savedPosition ? { ...savedPosition } : { left: 0, top: 0 };
+  },
   routes: [
     {
       path: "/",

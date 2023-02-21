@@ -42,7 +42,7 @@
 </template>
 <script setup lang="ts">
 import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref } from "vue";
 
 const props = withDefaults(
   defineProps<{
@@ -67,10 +67,6 @@ let flagAnimating = false;
 
 // 轮播图的src库
 const bannerList = computed(() => props.banners);
-
-watchEffect(() => {
-  console.log(bannerList.value);
-});
 
 // 轮播图当前页的索引（在翻页动画完成之前就已经更新）
 const nextIndex = ref(0);
