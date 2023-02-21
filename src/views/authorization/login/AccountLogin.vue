@@ -1,33 +1,52 @@
-<template class="as">
-  <main class="login-panel">
-    <h3>登录到系统</h3>
-    <p>测试账号与密码：test</p>
-    <el-form
-      ref="formRef"
-      :model="form"
-      status-icon
-      :rules="rules"
-      label-width="120px"
-      label-position="top"
-      class="demo-ruleForm"
-    >
-      <el-form-item label="User name" prop="name">
-        <el-input v-model="form.name" placeholder="Please username." />
-      </el-form-item>
-      <el-form-item label="Password" prop="pass">
-        <el-input v-model="form.pass" type="password" placeholder="Please password." />
-      </el-form-item>
-    </el-form>
-    <div>
-      <router-link to="/register">
-        <el-link>没有账号？立即注册></el-link>
-      </router-link>
+<template>
+  <header>
+    <div class="page-container container">
+      <RouterLink class="back" to="/">
+        <el-icon><ArrowLeft /></el-icon>返回首页
+      </RouterLink>
     </div>
-    <el-button @click="submitForm(formRef)">确认登录</el-button>
+  </header>
+  <main>
+    <!-- 登录面板 -->
+    <div class="login-panel">
+      <h3 class="title">账号登录</h3>
+      <!-- 表单 -->
+      <el-form ref="formRef" :model="form" status-icon :rules="rules" label-position="left">
+        <el-form-item class="form_item" label-width="40px" prop="name">
+          <template v-slot:label>
+            <el-icon class="icon"><User /></el-icon>
+          </template>
+          <el-input v-model="form.name" placeholder="请输入账号" />
+        </el-form-item>
+        <el-form-item class="form_item" label-width="40px" prop="pass">
+          <template v-slot:label>
+            <el-icon class="icon"><Lock /></el-icon>
+          </template>
+          <el-input v-model="form.pass" type="password" placeholder="请输入密码" />
+        </el-form-item>
+        <div>
+          <router-link to="/register">
+            <!-- <el-link>没有账号？立即注册></el-link> -->
+          </router-link>
+        </div>
+        <!-- 同意协议条款 -->
+        <div class="protocol">
+          <el-form-item prop="protocol">
+            <el-checkbox v-model="form.protocol" size="large" name="protocol">
+              <slot name="label">
+                同意《<a type="primary" link>用户协议</a>》和《<a type="primary" link>隐私政策</a>》
+              </slot>
+            </el-checkbox>
+          </el-form-item>
+        </div>
+      </el-form>
+      <el-button class="btn_loggin" type="primary" @click="submitForm(formRef)">确认登录</el-button>
+    </div>
   </main>
 </template>
 
 <script setup lang="ts">
+import { ArrowLeft } from "@element-plus/icons-vue";
 import { reactive, ref } from "vue";
 import { doLogin } from "@/api/auth-api";
 import { ElMessage, type FormInstance, type FormRules } from "element-plus";
@@ -46,6 +65,7 @@ const formRef = ref<FormInstance>();
 const form = reactive({
   name: "xiaotuxian001",
   pass: "123456",
+  protocol: false,
 });
 // 校验规则
 const rules = reactive<FormRules>({
@@ -68,6 +88,19 @@ const rules = reactive<FormRules>({
       trigger: "blur",
     },
     { min: 6, max: 20, message: "密码长度需要6~20个字符", trigger: "blur" },
+  ],
+  protocol: [
+    {
+      validator: (_rule, value, callback) => {
+        if (value) {
+          callback();
+        } else {
+          callback(new Error("请勾选同意条款"));
+        }
+      },
+      required: true,
+      trigger: "change",
+    },
   ],
 });
 
@@ -114,11 +147,77 @@ const login = () => {
 };
 </script>
 
-<style scoped lang="css">
-.login-panel {
-  background-color: var(--color-surface);
-  margin: 1rem auto;
-  padding: 1rem;
-  width: 400px;
+<style scoped lang="less">
+header {
+  height: 100px;
+  background: @surfaceColor;
+  .container {
+    line-height: 100px;
+    .back {
+      font-size: 1em;
+      margin: 0 1em;
+      transition: color.2s;
+      &:hover {
+        color: @primaryColor;
+      }
+      > * {
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+main {
+  height: 500px;
+  background: url(@/assets/images/login-bg.png) no-repeat;
+  background-position: center;
+  background-size: cover cover;
+  position: relative;
+  .login-panel {
+    background-color: var(--color-surface);
+    border-radius: 12px;
+    margin: 1rem auto;
+    padding: 2rem;
+    width: 320px;
+    position: absolute;
+    top: 50%;
+    right: 15%;
+    transform: translateY(-50%);
+    .form_item {
+      margin: 1.5em 0;
+      .icon {
+        font-size: 1.5em;
+        padding-top: 4px;
+      }
+    }
+    // 覆盖 required 的 * 符号
+    :deep(.el-form-item.is-required:not(.is-no-asterisk).asterisk-left > .el-form-item__label:before) {
+      content: none;
+    }
+    > .title {
+      margin-top: 0;
+    }
+    // 协议条款
+    .protocol {
+      label {
+        height: 2em;
+      }
+      :deep(.el-checkbox__label) {
+        color: @text2Color;
+      }
+      a {
+        transition: all.2s;
+        color: @primaryColor;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+      margin: 24px 0;
+    }
+    // 登录按钮
+    .btn_loggin {
+      width: 100%;
+    }
+  }
 }
 </style>

@@ -7,11 +7,11 @@
     <transition name="el-fade-in-linear">
       <ul v-if="result" class="goods">
         <li v-for="item in result" :key="item.id" :style="{ width: `${100 / result.length}%` }">
-          <RouterLink :to="`/product/${item.id}`">
+          <a href="javascript:;">
             <img :src="item.picture" />
             <p class="title">{{ item.title }}</p>
             <p class="desc">{{ item.alt }}</p>
-          </RouterLink>
+          </a>
         </li>
       </ul>
     </transition>
